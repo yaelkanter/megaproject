@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="CEMS (2)/CEMS_Client/src"/>
+	<classpathentry kind="src" path="CEMS (2)/CEMS_Server/src"/>
+	<classpathentry kind="src" path="CEMS (2)/OCSF/src"/>
+	<classpathentry kind="lib" path="CEMS (2)/CEMS_Server/lib/mysql-connector-java-8.0.13.jar"/>
+	<classpathentry kind="output" path="CEMS (2)/CEMS_Client/bin"/>
+</classpath>
