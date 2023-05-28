@@ -34,5 +34,6 @@ public class ClientController implements ChatIF {
 	public static void setResponseFromServer(final MissionPack obj) {
 		ClientController.response = obj;
 	}
+	///yael
 
 }
