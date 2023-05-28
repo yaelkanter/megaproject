@@ -84,5 +84,5 @@ public class ClientHandler extends AbstractClient {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
+	} //yoavkatz
 }
