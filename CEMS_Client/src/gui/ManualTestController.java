@@ -1,6 +1,13 @@
 package gui;
 
+import java.awt.TextArea;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
 
 import common.Question;
@@ -13,6 +20,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.scene.Node;
@@ -49,6 +58,9 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 		private TextField codeField;
 		
 		@FXML
+		private TextArea outputTextArea;
+		
+		@FXML
 		private TableColumn<Question, String> idcol;
 		
 		@FXML
@@ -59,6 +71,9 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 		
 		@FXML
 		private TableColumn<Question, String> authorcol;
+		
+		@FXML
+		private TableColumn<Question, String> duration;
 		
 		
 	   @FXML
@@ -94,7 +109,8 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 		idcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("id"));
 		subjectcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("subject"));
 		coursecol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("courseName"));
-		authorcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("questionText"));
+		authorcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("authorcol"));
+		duration.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("duration"));
 	}
 
 	void Back(final ActionEvent event) throws Exception {
@@ -106,20 +122,66 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 	}
 	
 	
-	  @FXML
-	    void GetTests(ActionEvent event) {
-		  ClientMissionHandler.GET_TESTS(this.Test, this.table);
-	    }
-
 	    @FXML
 	    void logout(ActionEvent event) {
 
 	    }
 
+	    //submit the test after uploading the file 
 	    @FXML
 	    void submit(ActionEvent event) {
 
 	    }
+	    
+	    //upload the test file 
+	    @SuppressWarnings("deprecation")
+		@FXML
+	    void upload(ActionEvent event) {
+	    	FileChooser fileChooser = new FileChooser();
+	        fileChooser.setTitle("Select Test File");
+	        
+	        // Set the initial directory for file selection (optional)
+	        fileChooser.setInitialDirectory(new File("C:/Users/Username/Documents"));
+	        
+	        // Add filters to specify the allowed file types (optional)
+	        fileChooser.getExtensionFilters().add(new ExtensionFilter("Word Files", "*.doc", "*.docx"));
+	        
+	        // Show the file chooser dialog and get the selected file
+	        File selectedFile = fileChooser.showOpenDialog(null);
+	        
+	        if (selectedFile != null) {
+	           
+	            
+	            //Save the file to the "uploads" folder in the current directory
+	            Path uploadsFolder = Paths.get("uploads");
+	            if (!Files.exists(uploadsFolder)) {
+	                try {
+	                    Files.createDirectory(uploadsFolder);
+	                } catch (IOException e) {
+	                    e.printStackTrace();
+	                    // Handle directory creation error
+	                }
+	            }
+	            
+	            // Define the destination file path in the uploads folder
+	            String fileName = selectedFile.getName();
+	            Path destination = uploadsFolder.resolve(fileName);
+	            
+	            try {
+	                // Copy the selected file to the destination folder
+	                Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+	                // File uploaded successfully
+	                System.out.println("File uploaded: " + destination);
+	                String message = "File uploaded: " + destination;
+	                outputTextArea.appendText(message);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	                // Handle file upload error
+	            }
+	        }
+	    }
+	    
+	    //initialize the table and the columns and the timer 
 	    @FXML
 	    public void initialize() {
 			setColumnsInTable();
@@ -139,6 +201,7 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 
 	        // Set the to repeat indefinitely
 	        timeline.setCycleCount(Animation.INDEFINITE);
+	        ClientMissionHandler.GET_TESTS(this.Test, this.table);
 		}
 	  
 	  
@@ -168,8 +231,21 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 	    
 	    @FXML
 	    void startTimer() {
-	        // Start the timer
-	        timeline.play();
+	    	Test selectedTest = table.getSelectionModel().getSelectedItem();
+	        if (selectedTest != null) {
+	            int testDuration = selectedTest.getDuration(); // Assuming 'duration' is an integer field in the 'Test' class
+	            secondsElapsed = 0;
+	            timeline.stop();
+	            timeline.getKeyFrames().setAll(new KeyFrame(Duration.seconds(1), event -> {
+	                secondsElapsed++;
+	                updateTimerLabel();
+	                if (secondsElapsed >= testDuration) {
+	                    timeline.stop();
+	                    // Perform any action you want when the timer reaches the test duration
+	                }
+	            }));
+	            timeline.play();
+	    }
 	    }
 
 	    @FXML

@@ -13,11 +13,12 @@ public class Test implements Serializable{
 	private String CourseName;
 	private String authorText;
 	private String status;
+	private Integer Duration;
 	
 	public Test(){
 	}
 	
-	public Test(String select,String id, String subjectText, String courseName, String authorText, String status) {
+	public Test(String select,String id, String subjectText, String courseName, String authorText, String status,Integer Duration) {
 		super();
 		this.select=select;
 		this.id = id;
@@ -25,7 +26,7 @@ public class Test implements Serializable{
 		this.CourseName = courseName;
 		this.authorText = authorText;
 		this.status = status;
-		
+		this.Duration = Duration;
 	}
 	
 	public String select() {
@@ -75,11 +76,17 @@ public class Test implements Serializable{
 	public void setstatus(String status) {
 		this.status = status;
 	}
+	public Integer getDuration() {
+		return Duration;
+	}
 
+	public void setDturation(Integer Duration) {
+		this.Duration = Duration;
+	}
 	
 	
 	public String toString() { return
-			 id+" "+subjectText+" "+CourseName+" "+subjectText+" "+status+" "; }
+			 id+" "+subjectText+" "+CourseName+" "+subjectText+" "+status+" "+status+" "; }
 	
 	
 	
