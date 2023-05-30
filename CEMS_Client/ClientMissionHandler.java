@@ -1,10 +1,6 @@
 package client;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import common.*;
@@ -18,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class ClientMissionHandler {
@@ -106,86 +101,26 @@ public class ClientMissionHandler {
 		}
 	}
 
-	//get the test data from the DB and shoe it in the screen 
-	public static void GET_TESTS(ObservableList<Test> listView, TableView<Test> table) {
-			MissionPack obj = new MissionPack(Mission.GET_TESTS, null, null);
+	//get the test data from the Db and shoe it in the screen 
+	public static void GET_TESTS(ObservableList<Test> test, TableView<Test> table) {
+		final Label statusLabel) {
+			MissionPack obj = new MissionPack(Mission.GET_QUESTIONS, null, null);
 			ClientUI.chat.accept(obj);
 			obj = ClientUI.chat.getResponseFromServer();
-			if (obj.getResponse() == Response.FOUND_TESTS) {
+			if (obj.getResponse() == Response.FOUND_QUESTIONS) {
 				listView.clear();
 				List<?> list = (List<?>) obj.getInformation();
 				for (int i = 0; i < list.size(); ++i) {
-					listView.add((Test) list.get(i));
+					listView.add((Question) list.get(i));
 					System.out.println(list.get(i));
 				}
 				table.setItems(listView);
-				
+				statusLabel.setText("Upload Success");
 			} else {
-				
+				statusLabel.setText("Upload Failed");
 			}
 		}
-	
-	// the download file operation after enter the code 
-	public static void DOWNLOAD_TEST( TextField codeField) {
-        String testCode = codeField.getText(); // Get the test code from the text field
-
-        // Check if the test code is valid
-        if (isValidTestCode(testCode)) {
-            // Perform the necessary steps to download the file
-            try {
-                // Retrieve the file based on the test code
-                File file = retrieveFileFromServer(testCode);
-
-                // Specify the file download location
-                FileChooser fileChooser = new FileChooser();
-                fileChooser.setTitle("Save File");
-                fileChooser.setInitialFileName(file.getName());
-
-                // Show the file save dialog
-                Stage stage = (Stage) codeField.getScene().getWindow();
-                File selectedFile = fileChooser.showSaveDialog(stage);
-
-                if (selectedFile != null) {
-                    // Copy the file to the selected location
-                    Files.copy(file.toPath(), selectedFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-                    // Display a success message
-                    //statusLabel.setText("File downloaded successfully.");
-                } else {
-                    // Display a message if the user cancels the file save dialog
-                    //statusLabel.setText("File download cancelled.");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Display an error message if an exception occurs during file download
-                //statusLabel.setText("Error occurred during file download.");
-            }
-        } else {
-            // Display an error message if the test code is invalid
-           // statusLabel.setText("Invalid test code.");
-        }
-    }
-
-    private static boolean isValidTestCode(String testCode) {
-        // Implement the logic to validate the test code
-        // Return true if the test code is valid, otherwise return false
-        // You can use regular expressions, database lookups, or any other validation mechanism
-        // based on your requirements
-        return true; // Placeholder, replace with your validation logic
-    }
-
-    private static File retrieveFileFromServer(String testCode) {
-        // Implement the logic to retrieve the file based on the test code from the server
-        // Return the File object representing the file to be downloaded
-        // You can fetch the file from a database, a file system, or any other storage mechanism
-        // based on your server implementation
-        // Replace the return statement with your retrieval logic
-        return new File("path/to/your/file"); // Placeholder, replace with your retrieval logic
-    }
-
-    // ...
-}
 		
-	
+	}
 
-
+}

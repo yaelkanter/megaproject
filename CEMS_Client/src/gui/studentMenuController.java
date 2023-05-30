@@ -1,11 +1,14 @@
 package gui;
 
+import client.ClientMissionHandler;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -26,7 +29,10 @@ public class studentMenuController implements EventHandler<WindowEvent> {
 		primaryStage.show();
 		primaryStage.setOnCloseRequest(this);
 	}
-
+	
+		
+		
+	
 	@Override
 	public void handle(WindowEvent event) {
 		// TODO Auto-generated method stub
