@@ -1,6 +1,6 @@
 package gui;
 
-import java.awt.TextArea;
+import javafx.stage.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -18,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.stage.FileChooser;
@@ -33,6 +34,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -96,14 +98,15 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 
 	ObservableList<Test> Test = FXCollections.observableArrayList();
 	public void start(final Stage primaryStage) throws Exception {
-		System.out.println("check1");
-		Parent root = FXMLLoader.load(this.getClass().getResource("/gui/ManuallTestController.fxml"));
+		System.out.println("ManuallTestController");
+		Parent root = FXMLLoader.load(this.getClass().getResource("/gui/manuallTestController.fxml"));
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("CEMS Student");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setOnCloseRequest(this);
 	}
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setColumnsInTable() {
 		idcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("id"));
@@ -129,8 +132,22 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 
 	    //submit the test after uploading the file 
 	    @FXML
-	    void submit(ActionEvent event) {
-
+	    void submit(ActionEvent event) throws IOException {
+	    	
+	    	 // Load the FXML file for the student menu screen
+	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/StudentMenuPage.fxml"));
+	        Parent root = loader.load();
+	        Scene scene = new Scene(root);
+	        
+	     // Create a new stage for the student menu screen
+	        Stage studentMenuStage = new Stage();
+	        studentMenuStage.setTitle("Student Menu");
+	        studentMenuStage.setScene(scene);
+	        studentMenuStage.show();
+	        
+	     // Close the current screen
+	        ((Node) event.getSource()).getScene().getWindow().hide();
+	        
 	    }
 	    
 	    //upload the test file 
@@ -174,6 +191,12 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 	                System.out.println("File uploaded: " + destination);
 	                String message = "File uploaded: " + destination;
 	                outputTextArea.appendText(message);
+	                // Show a pop-up dialog
+	                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	                alert.setTitle("Upload Successful");
+	                alert.setHeaderText(null);
+	                alert.setContentText("The test file has been uploaded successfully.");
+	                alert.showAndWait();
 	            } catch (IOException e) {
 	                e.printStackTrace();
 	                // Handle file upload error
@@ -182,7 +205,7 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 	    }
 	    
 	    //initialize the table and the columns and the timer 
-	    @FXML
+	    
 	    public void initialize() {
 			setColumnsInTable();
 			// This method is requesting data from the Server
@@ -201,7 +224,7 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 
 	        // Set the to repeat indefinitely
 	        timeline.setCycleCount(Animation.INDEFINITE);
-	        ClientMissionHandler.GET_TESTS(this.Test, this.table);
+	      
 		}
 	  
 	  
@@ -229,7 +252,7 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 	        timeline.play();
 	    }
 	    
-	    @FXML
+	    
 	    void startTimer() {
 	    	Test selectedTest = table.getSelectionModel().getSelectedItem();
 	        if (selectedTest != null) {
@@ -248,7 +271,7 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 	    }
 	    }
 
-	    @FXML
+	    
 	    void stopTimer() {
 	        // Stop the timer
 	        timeline.stop();

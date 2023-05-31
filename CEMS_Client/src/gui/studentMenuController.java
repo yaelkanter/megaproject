@@ -14,7 +14,11 @@ import javafx.stage.WindowEvent;
 
 public class studentMenuController implements EventHandler<WindowEvent> {
 	@FXML
-	private Button TestsButton;
+	private Button MenualtestButton;
+	
+	@FXML
+	private Button OnlinetestsButton;
+	
 	@FXML
 	private Button GradesButton;
 	@FXML
@@ -22,7 +26,7 @@ public class studentMenuController implements EventHandler<WindowEvent> {
 
 	public void start(final Stage primaryStage) throws Exception {
 		System.out.println("check1");
-		Parent root = FXMLLoader.load(this.getClass().getResource("/gui/StudentMenuPage.fxml"));
+		Parent root = FXMLLoader.load(this.getClass().getResource("/gui/student MenuPage.fxml"));
 		Scene scene = new Scene(root);
 		primaryStage.setTitle("CEMS Student");
 		primaryStage.setScene(scene);
@@ -30,12 +34,17 @@ public class studentMenuController implements EventHandler<WindowEvent> {
 		primaryStage.setOnCloseRequest(this);
 	}
 	
+	@FXML
+	public void handleManualtestClick(ActionEvent event) throws Exception {
 		
+		Stage primaryStage = new Stage();
+		ManualTestController clientController = new ManualTestController();
+		clientController.start(primaryStage);
+	}	
 		
-	
 	@Override
 	public void handle(WindowEvent event) {
-		// TODO Auto-generated method stub
+		
 
 	}
 }
