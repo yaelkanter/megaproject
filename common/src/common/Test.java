@@ -29,7 +29,7 @@ public class Test implements Serializable{
 		this.Duration = Duration;
 		this.TestCode = TestCode;
 	}
-	
+	//
 	public String select() {
 		return select;
 	}
