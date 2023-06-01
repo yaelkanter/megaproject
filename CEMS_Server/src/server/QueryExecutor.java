@@ -35,6 +35,30 @@ public class QueryExecutor {
 			obj.setResponse(Response.DIDNT_FOUND_QUESTIONS);
 		}
 	}
+	//Tests query
+	public static void getTestsData(MissionPack obj, Connection con) {
+		System.out.println("getTestsData");
+		List<Test> tests = new ArrayList<Test>();
+		try {
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM cems.tests");
+			ResultSet rs = ps.executeQuery();
+			while (rs.next()) {
+				tests.add(new Test(rs.getString("Select"),rs.getString("ID"), rs.getString("Subject"), rs.getString("Course"),
+						rs.getString("Author"), rs.getInt("Duration"),rs.getString("TestCode")));
+			}
+			System.out.println("Retrieved " + tests.size() + " tests from the database.");
+			rs.close();
+			if (tests.size() > 0) {
+				obj.setResponse(Response.FOUND_TESTS);
+				obj.setInformation(tests);
+				System.out.println(tests.toString());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("Importing orders from cems.Test failed!");
+			obj.setResponse(Response.DIDNT_FOUND_TESTS);
+		}
+	}
 
 	public static void updateClientInDatabase(MissionPack obj, Connection con) {
 		Question question = (Question) obj.getInformation();

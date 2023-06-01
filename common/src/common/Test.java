@@ -10,23 +10,24 @@ public class Test implements Serializable{
 	private String select;
 	private String id;
 	private String subjectText;
-	private String CourseName;
+	private String Course;
 	private String authorText;
 	private String status;
 	private Integer Duration;
+	private String TestCode;
 	
 	public Test(){
 	}
 	
-	public Test(String select,String id, String subjectText, String courseName, String authorText, String status,Integer Duration) {
+	public Test(String select,String id, String subjectText, String courseName, String authorText,Integer Duration,String TestCode) {
 		super();
 		this.select=select;
 		this.id = id;
 		this.subjectText = subjectText;
-		this.CourseName = courseName;
+		this.Course = courseName;
 		this.authorText = authorText;
-		this.status = status;
 		this.Duration = Duration;
+		this.TestCode = TestCode;
 	}
 	
 	public String select() {
@@ -54,11 +55,11 @@ public class Test implements Serializable{
 	}
 
 	public String getCourseName() {
-		return CourseName;
+		return Course;
 	}
 
 	public void setCourseName(String courseName) {
-		CourseName = courseName;
+		Course = courseName;
 	}
 
 	public String getAuthor() {
@@ -84,9 +85,15 @@ public class Test implements Serializable{
 		this.Duration = Duration;
 	}
 	
-	
+	public String getTestCode() {
+		return TestCode;
+	}
+
+	public void setTestCode(String TestCode) {
+		this.TestCode = TestCode;
+	}
 	public String toString() { return
-			 id+" "+subjectText+" "+CourseName+" "+subjectText+" "+status+" "+status+" "; }
+			 id+" "+subjectText+" "+Course+" "+subjectText+" "+status+" "+status+" "+TestCode+" "; }
 	
 	
 	

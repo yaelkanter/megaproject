@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ResourceBundle;
+import javafx.scene.control.TreeTableView;
+
 
 import common.Question;
 import common.Test;
@@ -42,7 +44,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
-public class ManualTestController implements EventHandler<WindowEvent> {
+public  class ManualTestController implements EventHandler<WindowEvent> {
 	
 		@FXML
 		private Button LogoutButton;
@@ -63,20 +65,22 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 		private TextArea outputTextArea;
 		
 		@FXML
-		private TableColumn<Question, String> idcol;
+		private TableColumn<Test, String> idcol;
 		
 		@FXML
-		private TableColumn<Question, String> subjectcol;
+		private TableColumn<Test, String> subjectcol;
 		
 		@FXML
-		private TableColumn<Question, String> coursecol;
+		private TableColumn<Test, String> coursecol;
 		
 		@FXML
-		private TableColumn<Question, String> authorcol;
+		private TableColumn<Test, String> authorcol;
 		
 		@FXML
-		private TableColumn<Question, String> duration;
+		private TableColumn<Test, Integer> duration;
 		
+		@FXML
+		private TableColumn<Test, String> codeCol;
 		
 	   @FXML
 	    private ResourceBundle resources;
@@ -109,191 +113,117 @@ public class ManualTestController implements EventHandler<WindowEvent> {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setColumnsInTable() {
-		idcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("id"));
-		subjectcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("subject"));
-		coursecol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("courseName"));
-		authorcol.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("authorcol"));
-		duration.setCellValueFactory((Callback) new PropertyValueFactory<Question, String>("duration"));
-	}
-
-	void Back(final ActionEvent event) throws Exception {
-		ClientMissionHandler.DISCONNECT_FROM_SERVER();
-		((Node) event.getSource()).getScene().getWindow().hide();
-		Stage primaryStage = new Stage();
-		ClientOpeningScreenController openScreen = new ClientOpeningScreenController();
-		openScreen.start(primaryStage);
+		idcol.setCellValueFactory((Callback) new PropertyValueFactory<Test, String>("Id"));
+		subjectcol.setCellValueFactory((Callback) new PropertyValueFactory<Test, String>("Subject"));
+		coursecol.setCellValueFactory((Callback) new PropertyValueFactory<Test, String>("Course"));
+		authorcol.setCellValueFactory((Callback) new PropertyValueFactory<Test, String>("Author"));
+		duration.setCellValueFactory((Callback) new PropertyValueFactory<Test, Integer>("Duration"));
+		codeCol.setCellValueFactory((Callback) new PropertyValueFactory<Test, String>("TestCode"));
 	}
 	
+	//initialize the table and the columns and the timer 
+    
+    public void initialize() {
+		setColumnsInTable();
+		// This method is requesting data from the Server
+		Test.clear();
+		// Setting the Data to be displayed in the TableView
+		table.setItems(Test);
+		table.autosize();
+		table.setEditable(true);
+		ClientMissionHandler.GET_TESTS(Test, this.table);
+		//timerLabel.setText("00:00");
+
+        // Create the  for the timer
+        //timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+           // secondsElapsed++;
+           // updateTimerLabel();
+       // }));
+
+        // Set the to repeat indefinitely
+       // timeline.setCycleCount(Animation.INDEFINITE);
+      
+	}
+  
+  
 	
-	    @FXML
-	    void logout(ActionEvent event) {
-
-	    }
-
-	    //submit the test after uploading the file 
-	    @FXML
-	    void submit(ActionEvent event) throws IOException {
-	    	
-	    	 // Load the FXML file for the student menu screen
-	        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/StudentMenuPage.fxml"));
-	        Parent root = loader.load();
-	        Scene scene = new Scene(root);
-	        
-	     // Create a new stage for the student menu screen
-	        Stage studentMenuStage = new Stage();
-	        studentMenuStage.setTitle("Student Menu");
-	        studentMenuStage.setScene(scene);
-	        studentMenuStage.show();
-	        
-	     // Close the current screen
-	        ((Node) event.getSource()).getScene().getWindow().hide();
-	        
-	    }
-	    
-	    //upload the test file 
-	    @SuppressWarnings("deprecation")
-		@FXML
-	    void upload(ActionEvent event) {
-	    	FileChooser fileChooser = new FileChooser();
-	        fileChooser.setTitle("Select Test File");
-	        
-	        // Set the initial directory for file selection (optional)
-	        fileChooser.setInitialDirectory(new File("C:/Users/Username/Documents"));
-	        
-	        // Add filters to specify the allowed file types (optional)
-	        fileChooser.getExtensionFilters().add(new ExtensionFilter("Word Files", "*.doc", "*.docx"));
-	        
-	        // Show the file chooser dialog and get the selected file
-	        File selectedFile = fileChooser.showOpenDialog(null);
-	        
-	        if (selectedFile != null) {
-	           
-	            
-	            //Save the file to the "uploads" folder in the current directory
-	            Path uploadsFolder = Paths.get("uploads");
-	            if (!Files.exists(uploadsFolder)) {
-	                try {
-	                    Files.createDirectory(uploadsFolder);
-	                } catch (IOException e) {
-	                    e.printStackTrace();
-	                    // Handle directory creation error
-	                }
-	            }
-	            
-	            // Define the destination file path in the uploads folder
-	            String fileName = selectedFile.getName();
-	            Path destination = uploadsFolder.resolve(fileName);
-	            
-	            try {
-	                // Copy the selected file to the destination folder
-	                Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
-	                // File uploaded successfully
-	                System.out.println("File uploaded: " + destination);
-	                String message = "File uploaded: " + destination;
-	                outputTextArea.appendText(message);
-	                // Show a pop-up dialog
-	                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	                alert.setTitle("Upload Successful");
-	                alert.setHeaderText(null);
-	                alert.setContentText("The test file has been uploaded successfully.");
-	                alert.showAndWait();
-	            } catch (IOException e) {
-	                e.printStackTrace();
-	                // Handle file upload error
-	            }
-	        }
-	    }
-	    
-	    //initialize the table and the columns and the timer 
-	    
-	    public void initialize() {
-			setColumnsInTable();
-			// This method is requesting data from the Server
-			Test.clear();
-			// Setting the Data to be displayed in the TableView
-			table.setItems(Test);
-			table.autosize();
-			table.setEditable(true);
-			timerLabel.setText("00:00");
-
-	        // Create the  for the timer
-	        timeline = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-	            secondsElapsed++;
-	            updateTimerLabel();
-	        }));
-
-	        // Set the to repeat indefinitely
-	        timeline.setCycleCount(Animation.INDEFINITE);
-	      
-		}
-	  
-	  
-	    
-	    //
-	    @FXML
-	    void DownloadTest(final ActionEvent event) {
-	    	String enteredCode = codeField.getText();
-	    	codeField.clear();
-	    	//check if the code field is empty and then send message
-	    	  if (enteredCode.isEmpty()) {
-	    		  codeField.setStyle("-fx-text-box-border: red; -fx-focus-color: red;");
-	    		  downloadButtom.setDisable(true);
-	    	        return;
-	    	   }else {
-	    		   // Reset the style to the default
-	    	        codeField.setStyle("");
-	    	        downloadButtom.setDisable(false); // Enable the download button
-	    	    
-	    	   }
-	    	  
-	        ClientMissionHandler.DOWNLOAD_TEST(codeField);
-
-	        // Start the timer
-	        timeline.play();
-	    }
-	    
-	    
-	    void startTimer() {
-	    	Test selectedTest = table.getSelectionModel().getSelectedItem();
-	        if (selectedTest != null) {
-	            int testDuration = selectedTest.getDuration(); // Assuming 'duration' is an integer field in the 'Test' class
-	            secondsElapsed = 0;
-	            timeline.stop();
-	            timeline.getKeyFrames().setAll(new KeyFrame(Duration.seconds(1), event -> {
-	                secondsElapsed++;
-	                updateTimerLabel();
-	                if (secondsElapsed >= testDuration) {
-	                    timeline.stop();
-	                    // Perform any action you want when the timer reaches the test duration
-	                }
-	            }));
-	            timeline.play();
-	    }
-	    }
-
-	    
-	    void stopTimer() {
-	        // Stop the timer
-	        timeline.stop();
-	    }
-	    private void updateTimerLabel() {
-	        // Convert seconds to minutes and seconds
-	        int minutes = secondsElapsed / 60;
-	        int seconds = secondsElapsed % 60;
-
-	        // Format the time as "mm:ss"
-	        String formattedTime = String.format("%02d:%02d", minutes, seconds);
-
-	        // Update the label text
-	        timerLabel.setText(formattedTime);
-	    }
-	    
-	 
-
+	   //submit the test after uploading the file 
+    @FXML
+    void submit(ActionEvent event) throws IOException {
+    	
+    	 // Load the FXML file for the student menu screen
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/StudentMenuPage.fxml"));
+        Parent root = loader.load();
+        Scene scene = new Scene(root);
+        
+     // Create a new stage for the student menu screen
+        Stage studentMenuStage = new Stage();
+        studentMenuStage.setTitle("Student Menu");
+        studentMenuStage.setScene(scene);
+        studentMenuStage.show();
+        
+     // Close the current screen
+        ((Node) event.getSource()).getScene().getWindow().hide();
+        
+    }
+  //upload the test file 
+    @SuppressWarnings("deprecation")
+	@FXML
+    void upload(ActionEvent event) {
+    	FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Select Test File");
+        
+        // Set the initial directory for file selection (optional)
+        fileChooser.setInitialDirectory(new File("C:\\Users\\yaelk\\Documents"));
+        
+        // Add filters to specify the allowed file types (optional)
+        fileChooser.getExtensionFilters().add(new ExtensionFilter("Word Files", "*.doc", "*.docx"));
+        
+        // Show the file chooser dialog and get the selected file
+        File selectedFile = fileChooser.showOpenDialog(null);
+        
+        if (selectedFile != null) {
+           
+            
+            //Save the file to the "uploads" folder in the current directory
+            Path uploadsFolder = Paths.get("uploads");
+            if (!Files.exists(uploadsFolder)) {
+                try {
+                    Files.createDirectory(uploadsFolder);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    // Handle directory creation error
+                }
+            }
+            
+            // Define the destination file path in the uploads folder
+            String fileName = selectedFile.getName();
+            Path destination = uploadsFolder.resolve(fileName);
+            
+            try {
+                // Copy the selected file to the destination folder
+                Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+                // File uploaded successfully
+                System.out.println("File uploaded: " + destination);
+                String message = "File uploaded: " + destination;
+                //outputTextArea.appendText(message);
+                // Show a pop-up dialog
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Upload Successful");
+                alert.setHeaderText(null);
+                alert.setContentText("The test file has been uploaded successfully.");
+                alert.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+                // Handle file upload error
+            }
+        }
+    }
+    
 
 	@Override
 	public void handle(WindowEvent event) {
 		// TODO Auto-generated method stub
-
+		
 	}
 }

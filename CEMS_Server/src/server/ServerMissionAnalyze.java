@@ -15,7 +15,10 @@ public class ServerMissionAnalyze {
 			QueryExecutor.getQuestionsData(obj, DatabaseConnector.getDatabaseConnectorInstance().getConnection());
 			break;
 		}
-
+		case GET_TESTS: {
+			QueryExecutor.getTestsData(obj, DatabaseConnector.getDatabaseConnectorInstance().getConnection());
+			break;
+		}
 		case EDIT_QUESTIONS_DATA: {
 			QueryExecutor.updateClientInDatabase(obj, DatabaseConnector.getDatabaseConnectorInstance().getConnection());
 			break;

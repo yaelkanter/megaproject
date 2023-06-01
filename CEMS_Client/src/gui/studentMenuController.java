@@ -5,6 +5,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -40,6 +41,7 @@ public class studentMenuController implements EventHandler<WindowEvent> {
 		Stage primaryStage = new Stage();
 		ManualTestController clientController = new ManualTestController();
 		clientController.start(primaryStage);
+		((Node) event.getSource()).getScene().getWindow().hide();//hide the screen 
 	}	
 		
 	@Override

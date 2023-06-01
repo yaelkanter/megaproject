@@ -116,14 +116,17 @@ public class ClientMissionHandler {
 				List<?> list = (List<?>) obj.getInformation();
 				for (int i = 0; i < list.size(); ++i) {
 					listView.add((Test) list.get(i));
-					System.out.println(list.get(i));
+					System.out.println(list.get(i).toString());
+					
 				}
 				table.setItems(listView);
 				
 			} else {
-				
+				System.out.println("No tests found.");
 			}
 		}
+	
+	
 	
 	// the download file operation after enter the code 
 	public static void DOWNLOAD_TEST( TextField codeField) {
