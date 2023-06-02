@@ -54,11 +54,11 @@ public class Test implements Serializable{
 		this.subjectText = subjectText;
 	}
 
-	public String getCourseName() {
+	public String getCourse() {
 		return Course;
 	}
 
-	public void setCourseName(String courseName) {
+	public void setCourse(String courseName) {
 		Course = courseName;
 	}
 

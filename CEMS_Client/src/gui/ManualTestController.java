@@ -111,6 +111,9 @@ public  class ManualTestController implements EventHandler<WindowEvent> {
 		primaryStage.setOnCloseRequest(this);
 	}
 	
+	
+	
+	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void setColumnsInTable() {
 		idcol.setCellValueFactory((Callback) new PropertyValueFactory<Test, String>("Id"));
@@ -169,56 +172,56 @@ public  class ManualTestController implements EventHandler<WindowEvent> {
   //upload the test file 
     @SuppressWarnings("deprecation")
 	@FXML
-    void upload(ActionEvent event) {
-    	FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Select Test File");
-        
-        // Set the initial directory for file selection (optional)
-        fileChooser.setInitialDirectory(new File("C:\\Users\\yaelk\\Documents"));
-        
-        // Add filters to specify the allowed file types (optional)
-        fileChooser.getExtensionFilters().add(new ExtensionFilter("Word Files", "*.doc", "*.docx"));
-        
-        // Show the file chooser dialog and get the selected file
-        File selectedFile = fileChooser.showOpenDialog(null);
-        
-        if (selectedFile != null) {
-           
-            
-            //Save the file to the "uploads" folder in the current directory
-            Path uploadsFolder = Paths.get("uploads");
-            if (!Files.exists(uploadsFolder)) {
-                try {
-                    Files.createDirectory(uploadsFolder);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    // Handle directory creation error
-                }
-            }
-            
-            // Define the destination file path in the uploads folder
-            String fileName = selectedFile.getName();
-            Path destination = uploadsFolder.resolve(fileName);
-            
-            try {
-                // Copy the selected file to the destination folder
-                Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
-                // File uploaded successfully
-                System.out.println("File uploaded: " + destination);
-                String message = "File uploaded: " + destination;
-                //outputTextArea.appendText(message);
-                // Show a pop-up dialog
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Upload Successful");
-                alert.setHeaderText(null);
-                alert.setContentText("The test file has been uploaded successfully.");
-                alert.showAndWait();
-            } catch (IOException e) {
-                e.printStackTrace();
-                // Handle file upload error
-            }
-        }
-    }
+	void upload(ActionEvent event) {
+	    FileChooser fileChooser = new FileChooser();
+	    fileChooser.setTitle("Select Test File");
+
+	    // Set the initial directory for file selection
+	    String userHomeDirectory = System.getProperty("user.home");
+	    fileChooser.setInitialDirectory(new File(userHomeDirectory));
+
+	    // Add filters to specify the allowed file types (optional)
+	    fileChooser.getExtensionFilters().add(new ExtensionFilter("Word Files", "*.doc", "*.docx"));
+
+	    // Show the file chooser dialog and get the selected file
+	    File selectedFile = fileChooser.showOpenDialog(null);
+
+	    if (selectedFile != null) {
+	        // Save the file to the "uploads" folder in the current directory
+	        Path uploadsFolder = Paths.get("uploads");
+	        if (!Files.exists(uploadsFolder)) {
+	            try {
+	                Files.createDirectory(uploadsFolder);
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	                // Handle directory creation error
+	            }
+	        }
+
+	        // Define the destination file path in the uploads folder
+	        String fileName = selectedFile.getName();
+	        Path destination = uploadsFolder.resolve(fileName);
+
+	        try {
+	            // Copy the selected file to the destination folder
+	            Files.copy(selectedFile.toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+	            // File uploaded successfully
+	            System.out.println("File uploaded: " + destination);
+	            String message = "File uploaded: " + destination;
+	            //outputTextArea.appendText(message);
+	            // Show a pop-up dialog
+	            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+	            alert.setTitle("Upload Successful");
+	            alert.setHeaderText(null);
+	            alert.setContentText("The test file has been uploaded successfully.");
+	            alert.showAndWait();
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            // Handle file upload error
+	        }
+	    }
+	}
+
     
 
 	@Override
